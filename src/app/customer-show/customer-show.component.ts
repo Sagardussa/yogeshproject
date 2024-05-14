@@ -1,11 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
 
 @Component({
   selector: 'app-customer-show',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './customer-show.component.html',
   styleUrl: './customer-show.component.css',
 })
@@ -35,6 +40,11 @@ export class CustomerShowComponent implements OnInit {
 
     this.customerlist.splice(index, 1);
     localStorage.setItem('customers', JSON.stringify(this.customerlist));
-    alert("delete")
+    alert('delete');
   }
+
+  onviewCustomer(id: number) {
+    this.router.navigate(['/Customersummary', id]);
+  }
+
 }
