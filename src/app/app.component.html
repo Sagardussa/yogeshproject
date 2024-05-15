@@ -16,21 +16,21 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/Customers" routerLinkActive="active"
+          <a
+            class="nav-link"
+            [routerLink]="['/Customer']"
+            routerLinkActive="active"
             >Add Customer</a
           >
         </li>
         <li class="nav-item">
           <a
             class="nav-link"
-            routerLink="/Customershow"
+            [routerLink]="['/Customershow']"
             routerLinkActive="active"
             >Customerlist</a
           >
         </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" routerLink="/userlist" routerLinkActive="active">UserList</a>
-        </li> -->
       </ul>
     </div>
   </div>

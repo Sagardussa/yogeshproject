@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './summary-details.component.html',
   styleUrl: './summary-details.component.css',
 })
-export default class SummaryDetailsComponent implements OnInit {
+export class SummaryDetailsComponent implements OnInit {
   activatedRoute = inject(ActivatedRoute);
   customerId: number = 0;
   customerlist: any[] = [];
@@ -20,8 +20,10 @@ export default class SummaryDetailsComponent implements OnInit {
       this.customerlist = JSON.parse(localData);
     }
     this.activatedRoute.params.subscribe((res: any) => {
-      if (res.id) {
-        this.customerId = res.id;
+      console.log("res",res);
+      
+      if (res.customerid) {
+        this.customerId = res.customerid;
       }
     });
   }

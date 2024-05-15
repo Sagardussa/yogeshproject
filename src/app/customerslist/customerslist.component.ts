@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -9,17 +9,14 @@ import {
   Validators,
 } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { state } from '@angular/animations';
-import { ToastrService } from 'ngx-toastr';
-import { json } from 'stream/consumers';
 import { CustomerService } from '../customer.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-customerslist',
   standalone: true,
   imports: [HttpClientModule, ReactiveFormsModule, CommonModule, FormsModule],
-
   templateUrl: './customerslist.component.html',
   styleUrl: './customerslist.component.css',
 })
@@ -27,6 +24,7 @@ export class CustomerslistComponent implements OnInit {
   fb = inject(FormBuilder);
   router = inject(Router);
   activatedRoute = inject(ActivatedRoute);
+  toastrService = inject(ToastrService);
 
   selectedUser: any;
   panIsValid: boolean = false;
@@ -102,19 +100,7 @@ export class CustomerslistComponent implements OnInit {
         }
       }
     }
-
-    // let customerlist: any = localStorage.getItem('customers');
-    // this.customerlist = customerlist && JSON.parse(customerlist);
-    // console.log(this.customerlist);
   }
-
-  // saveCustomer(customerlist: any) {
-  //   this.customerlist.push(customerlist);
-
-  //   localStorage.setItem('customers', JSON.stringify(this.customerlist));
-
-  //   this.customerlist = this.customerlist.slice();
-  // }
 
   AddCustomer() {
     const formData = this.customerform.value;
@@ -125,33 +111,20 @@ export class CustomerslistComponent implements OnInit {
       this.customerlist.push(formData);
       localStorage.setItem('customers', JSON.stringify(this.customerlist));
       this.customerform.reset();
+      setTimeout(() => {
+        this.router.navigate(['Customershow']);
+      }, 1000);
     } else {
       const parseData = JSON.parse(localData);
       this.customerform.value.id = parseData.length + 1;
       this.customerlist.push(formData);
       localStorage.setItem('customers', JSON.stringify(this.customerlist));
       this.customerform.reset();
+      this.toastrService.success('Added completed successfully!', 'Success');
+      setTimeout(() => {
+        this.router.navigate(['Customershow']);
+      }, 1000);
     }
-
-    // const formData = this.customerform.value;
-    // const existingCustomerIndex = this.customerlist.findIndex(
-    //   (cust: { panNumber: any }) => cust.panNumber === formData.panNumber
-    // );
-    // console.log('existingCustomerIndex', existingCustomerIndex);
-
-    // if (existingCustomerIndex !== -1) {
-    //   this.customerlist[existingCustomerIndex] = formData;
-    // } else {
-    // this.customerlist.push({
-    //   id: Math.random().toString(36).substr(2, 9),
-    //   ...formData,
-    // });
-
-    // localStorage.setItem('customers', JSON.stringify(this.customerlist));
-    // this.customerlist = this.customerlist.slice();
-    this.modalService.dismissAll('Save click');
-    // this.customerform.reset();
-    this.router.navigate(['Customershow']);
   }
 
   updateCustomer() {
@@ -171,25 +144,26 @@ export class CustomerslistComponent implements OnInit {
     if (localData == null) {
       this.customerlist.push(formData);
       localStorage.setItem('customers', JSON.stringify(this.customerlist));
-      this.router.navigate(['Customershow']);
+      this.toastrService.success('updated completed successfully!', 'Success');
+      setTimeout(() => {
+        this.router.navigate(['Customershow']);
+      }, 1000);
     } else {
       // const parseData = JSON.parse(localData);
       this.customerform.value.id = index + 1;
       this.customerlist.push(formData);
       localStorage.setItem('customers', JSON.stringify(this.customerlist));
-      this.router.navigate(['Customershow']);
+      this.toastrService.success('updated completed successfully!', 'Success');
+      setTimeout(() => {
+        this.router.navigate(['Customershow']);
+      }, 1000);
     }
-
-    // this.customerlist.push(formData);
-    // localStorage.setItem('customers', JSON.stringify(this.customerlist));
-    // this.router.navigate(['Customershow']);
   }
 
   AddValidPan() {
     let panNumber = { panNumber: this.customerform.value.panNumber };
     if (panNumber) {
       this.customerService.postValidPan(panNumber).subscribe((data) => {
-        // this.customerform.value.fullName = data?.fullName;
         console.log('data', data.isValid);
         this.panIsValid = data.isValid;
         this.customerform.patchValue({
@@ -207,7 +181,6 @@ export class CustomerslistComponent implements OnInit {
         console.log('res', response);
 
         if (response.status === 'Success') {
-          // console.log('response.city[0].name ==>', response.city[0].name);
           if (response.city[0].name && response.state[0].name) {
             this.customerform.patchValue({
               city: response.city[0].name,
@@ -222,35 +195,17 @@ export class CustomerslistComponent implements OnInit {
     );
   }
 
-  // deleteCustomerDetails(index: number) {
-  //   console.log('deleteCustomerDetails', index);
-
-  //   this.customerlist.splice(index, 1);
-
-  //   localStorage.setItem('customers', JSON.stringify(this.customerlist));
-
-  //   this.customerlist = this.customerlist.slice();
-  // }
-
-  openEditModal(user: any) {
-    this.selectedUser = user;
-    this.editForm.patchValue({
-      fullName: user.fullName,
-      email: user.email,
-    });
-    this.modalService
-      .open(this.selectedUser, { ariaLabelledBy: 'editModalLabel' })
-      .result.then(
-        (result) => {},
-        (reason) => {}
-      );
-  }
-
-  // editUser() {
-  //   const editedData = this.editForm.value;
-
-  //   console.log('Edited User Data:', editedData);
-
-  //   this.modalService.dismissAll('Edit click');
+  // openEditModal(user: any) {
+  //   this.selectedUser = user;
+  //   this.editForm.patchValue({
+  //     fullName: user.fullName,
+  //     email: user.email,
+  //   });
+  //   this.modalService
+  //     .open(this.selectedUser, { ariaLabelledBy: 'editModalLabel' })
+  //     .result.then(
+  //       (result) => {},
+  //       (reason) => {}
+  //     );
   // }
 }

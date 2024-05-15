@@ -33,12 +33,18 @@
                 <i class="fas fa-edit"></i> Edit
               </button>
 
-              <button (click)="onDeleteCustomer(user.id)" class="btn btn-outline-danger action-button">
+              <button
+                (click)="onDeleteCustomer(user.id)"
+                class="btn btn-outline-danger mx-2 action-button"
+              >
                 <i class="fas fa-trash-alt"></i> Delete
               </button>
 
-              <button (click)="onviewCustomer(user.id)" class="btn btn-outline-danger action-button">
-                <i class="fas fa-trash-alt"></i> view
+              <button
+                (click)="onviewCustomer(user.id)"
+                class="btn btn-outline-success"
+              >
+                <i class="fa-solid fa-user"></i>view
               </button>
             </td>
           </tr>
